@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import timber.log.Timber;
+
 public class CameraActivity extends Activity implements PictureCallback, SurfaceHolder.Callback {
 
   public static final String EXTRA_CAMERA_DATA = "camera_data";
@@ -52,6 +54,7 @@ public class CameraActivity extends Activity implements PictureCallback, Surface
         Intent intent = new Intent();
 
 
+        Timber.d("mCameraData%s",mCameraData);
 
         intent.putExtra(EXTRA_CAMERA_DATA, mCameraData);
         setResult(RESULT_OK, intent);
