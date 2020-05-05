@@ -83,9 +83,6 @@ public class MainActivity extends AppCompatActivity {
                                    if (permission.granted) {
                                        findViewById(R.id.capture_image_button).setOnClickListener(mCaptureImageButtonClickListener);
 
-                                       mSaveImageButton = (Button) findViewById(R.id.save_image_button);
-                                       mSaveImageButton.setOnClickListener(mSaveImageButtonClickListener);
-                                       mSaveImageButton.setEnabled(false);
                                    } else if (permission.shouldShowRequestPermissionRationale) {
                                        // Denied permission without ask never again
                                        Toast.makeText(MainActivity.this,
@@ -113,6 +110,10 @@ public class MainActivity extends AppCompatActivity {
                         });
 
 
+        mSaveImageButton = (Button) findViewById(R.id.save_image_button);
+        mSaveImageButton.setOnClickListener(mSaveImageButtonClickListener);
+        mSaveImageButton.setEnabled(false);
+
     }
 
     @Override
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                     mCameraBitmap = null;
                 }
                 Bundle extras = data.getExtras();
-                mCameraBitmap = (Bitmap) extras.get("data");
+                //mCameraBitmap = (Bitmap) extras.get("data");
                 byte[] cameraData = extras.getByteArray(CameraActivity.EXTRA_CAMERA_DATA);
                 if (cameraData != null) {
                     mCameraBitmap = BitmapFactory.decodeByteArray(cameraData, 0, cameraData.length);
@@ -141,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startImageCapture() {
-        startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), TAKE_PICTURE_REQUEST_B);
+        //startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), TAKE_PICTURE_REQUEST_B);
         startActivityForResult(new Intent(MainActivity.this, CameraActivity.class), TAKE_PICTURE_REQUEST_B);
     }
 
@@ -151,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         if (storageState.equals(Environment.MEDIA_MOUNTED)) {
             imageDirectory = new File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                    "com.oreillyschool.android2.camera");
+                    "com.example.anothercamera");
             if (!imageDirectory.exists() && !imageDirectory.mkdirs()) {
                 imageDirectory = null;
             } else {

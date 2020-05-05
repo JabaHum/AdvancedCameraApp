@@ -1,6 +1,7 @@
 package com.example.anothercamera;
 
 import java.io.IOException;
+import java.sql.Time;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -49,6 +50,9 @@ public class CameraActivity extends Activity implements PictureCallback, Surface
     public void onClick(View v) {
       if (mCameraData != null) {
         Intent intent = new Intent();
+
+
+
         intent.putExtra(EXTRA_CAMERA_DATA, mCameraData);
         setResult(RESULT_OK, intent);
       } else {
