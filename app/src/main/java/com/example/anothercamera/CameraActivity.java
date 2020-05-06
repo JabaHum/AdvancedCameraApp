@@ -1,15 +1,15 @@
 package com.example.anothercamera;
 
-import java.io.IOException;
-import java.sql.Time;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -17,6 +17,19 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.example.anothercamera.ImageCompression.IImageCompressTaskListener;
+import com.example.anothercamera.ImageCompression.ImageCompressTask;
+import com.example.anothercamera.base.MyApplication;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import timber.log.Timber;
 
@@ -32,6 +45,12 @@ public class CameraActivity extends Activity implements PictureCallback, Surface
   private Button mCaptureImageButton;
   private byte[] mCameraData;
   private boolean mIsCapturing;
+  private Bitmap mCameraBitmap;
+
+  //create a single thread pool to our image compression class.
+  private ExecutorService mExecutorService = Executors.newFixedThreadPool(1);
+
+  private ImageCompressTask imageCompressTask;
   
   private OnClickListener mCaptureImageButtonClickListener = new OnClickListener() {
     @Override
@@ -52,8 +71,7 @@ public class CameraActivity extends Activity implements PictureCallback, Surface
     public void onClick(View v) {
       if (mCameraData != null) {
         Intent intent = new Intent();
-        Timber.d("mCameraData%s",mCameraData);
-        intent.putExtra(EXTRA_CAMERA_DATA, mCameraData);
+        MyApplication.getInstance().setCapturedPhotoData(mCameraData);
         setResult(RESULT_OK, intent);
       } else {
         setResult(RESULT_CANCELED);
@@ -61,7 +79,8 @@ public class CameraActivity extends Activity implements PictureCallback, Surface
       finish();
     }
   };
-  
+
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -135,6 +154,7 @@ public class CameraActivity extends Activity implements PictureCallback, Surface
   @Override
   public void onPictureTaken(byte[] data, Camera camera) {
     mCameraData = data;
+
     setupImageDisplay();
   }
   

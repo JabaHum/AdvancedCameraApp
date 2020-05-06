@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.anothercamera.base.MyApplication;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -29,6 +29,7 @@ import java.util.Locale;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
+import timber.log.Timber;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
                                @Override
                                public void accept(Permission permission) throws Exception {
-                                   Log.i(APP_TAG, "Permission result " + permission);
+                                   Timber.i("Permission result " + permission);
                                    if (permission.granted) {
                                        findViewById(R.id.capture_image_button).setOnClickListener(mCaptureImageButtonClickListener);
 
@@ -127,8 +128,7 @@ public class MainActivity extends AppCompatActivity {
                     mCameraBitmap = null;
                 }
                 Bundle extras = data.getExtras();
-                //mCameraBitmap = (Bitmap) extras.get("data");
-                byte[] cameraData = extras.getByteArray(CameraActivity.EXTRA_CAMERA_DATA);
+                byte[] cameraData = MyApplication.getInstance().getCapturedPhotoData();
                 if (cameraData != null) {
                     mCameraBitmap = BitmapFactory.decodeByteArray(cameraData, 0, cameraData.length);
                     mCameraImageView.setImageBitmap(mCameraBitmap);
@@ -142,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startImageCapture() {
-        //startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), TAKE_PICTURE_REQUEST_B);
         startActivityForResult(new Intent(MainActivity.this, CameraActivity.class), TAKE_PICTURE_REQUEST_B);
     }
 
