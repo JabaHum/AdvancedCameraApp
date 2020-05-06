@@ -52,10 +52,7 @@ public class CameraActivity extends Activity implements PictureCallback, Surface
     public void onClick(View v) {
       if (mCameraData != null) {
         Intent intent = new Intent();
-
-
         Timber.d("mCameraData%s",mCameraData);
-
         intent.putExtra(EXTRA_CAMERA_DATA, mCameraData);
         setResult(RESULT_OK, intent);
       } else {
