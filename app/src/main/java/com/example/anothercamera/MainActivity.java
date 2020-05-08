@@ -21,6 +21,7 @@ import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -145,16 +146,20 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(new Intent(MainActivity.this, CameraActivity.class), TAKE_PICTURE_REQUEST_B);
     }
 
-    private File openFileForImage() {
+    private File openFileForImage( ) {
         File imageDirectory = null;
         String storageState = Environment.getExternalStorageState();
         if (storageState.equals(Environment.MEDIA_MOUNTED)) {
             imageDirectory = new File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                    "com.example.anothercamera");
+                    "/Android/data/"
+                            + getApplicationContext().getPackageName()
+                            + "/Files");
             if (!imageDirectory.exists() && !imageDirectory.mkdirs()) {
                 imageDirectory = null;
             } else {
+
+
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_mm_dd_hh_mm",
                         Locale.getDefault());
 
@@ -175,6 +180,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Unable to save image to file.",
                             Toast.LENGTH_LONG).show();
                 } else {
+
+                    Timber.d("Path : %s",file.getPath());
                     Toast.makeText(MainActivity.this, "Saved image to: " + file.getPath(),
                             Toast.LENGTH_LONG).show();
                 }

@@ -129,7 +129,7 @@ public class CameraActivity extends Activity implements PictureCallback, Surface
     
     if (mCamera == null) {
       try {
-        mCamera = Camera.open();              
+        mCamera = Camera.open();
         mCamera.setPreviewDisplay(mCameraPreview.getHolder());
         if (mIsCapturing) {
           mCamera.startPreview();
